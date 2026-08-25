@@ -29,6 +29,14 @@ jobs:
           rm -f .github/workflows/export-source-for-chatgpt.yml
           rm -f .github/workflows/test-oss-eval-dataset-versions.yml
           rm -f .github/workflows/apply-oss-eval-dataset-versions.yml
+      - name: Snapshot applied patch for inspection
+        shell: bash
+        run: |
+          git config user.name 'Diogo Santos'
+          git config user.email 'diogofcul@hotmail.com'
+          git add -A
+          git commit -m 'debug: materialize OSS dataset version patch'
+          git push --force origin HEAD:chatgpt/oss-eval-dataset-versions-applied
       - name: Compile changed Python
         run: |
           python -m py_compile \
@@ -63,8 +71,6 @@ jobs:
       - name: Commit validated working state
         shell: bash
         run: |
-          git config user.name 'Diogo Santos'
-          git config user.email 'diogofcul@hotmail.com'
           git add -A
-          git commit -m 'feat: add immutable OSS evaluation dataset versions'
+          git commit --allow-empty -m 'feat: add immutable OSS evaluation dataset versions'
           git push origin HEAD:feat/oss-eval-dataset-versions
