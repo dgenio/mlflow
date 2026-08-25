@@ -22,8 +22,7 @@ jobs:
       - name: Apply contribution patch
         shell: bash
         run: |
-          cat .chatgpt/patch.* > /tmp/patch.b64
-          base64 -d /tmp/patch.b64 | gzip -d > /tmp/oss-eval-versions.patch
+          base64 -d .chatgpt/patch.b64 | gzip -d > /tmp/oss-eval-versions.patch
           git apply --check /tmp/oss-eval-versions.patch
           git apply /tmp/oss-eval-versions.patch
           rm -rf .chatgpt
@@ -48,7 +47,7 @@ jobs:
             mlflow/store/db_migrations/versions/c4a9f33e8b71_add_evaluation_dataset_versions.py
       - name: Generate protobuf outputs
         run: ./dev/generate-protos.sh
-      - name: Install MLflow test dependencies
+      - name: Install MLflow and pytest
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
