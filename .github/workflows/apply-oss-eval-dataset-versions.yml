@@ -50,7 +50,7 @@ jobs:
       - name: Install MLflow and pytest
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e . pytest
+          python -m pip install -e . pytest pytest-asyncio pytest-timeout
       - name: Run focused tests
         run: |
           pytest -q tests/store/tracking/sqlalchemy_store/test_sqlalchemy_store_eval_datasets.py
