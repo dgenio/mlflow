@@ -22,7 +22,7 @@ jobs:
       - name: Apply contribution patch
         shell: bash
         run: |
-          base64 -d .chatgpt/patch.b64 | gzip -d > /tmp/oss-eval-versions.patch
+          cat .chatgpt/final.* | base64 -d | gzip -d > /tmp/oss-eval-versions.patch
           git apply --check /tmp/oss-eval-versions.patch
           git apply /tmp/oss-eval-versions.patch
           rm -rf .chatgpt
@@ -35,7 +35,6 @@ jobs:
             mlflow/store/tracking/dbmodels/models.py \
             mlflow/store/tracking/sqlalchemy_store.py \
             mlflow/store/tracking/abstract_store.py \
-            mlflow/store/tracking/sqlalchemy_workspace_store.py \
             mlflow/data/evaluation_dataset_source.py \
             mlflow/entities/evaluation_dataset.py \
             mlflow/genai/datasets/evaluation_dataset.py \
@@ -44,7 +43,8 @@ jobs:
             mlflow/tracking/_tracking_service/client.py \
             mlflow/tracking/client.py \
             mlflow/server/handlers.py \
-            mlflow/store/db_migrations/versions/c4a9f33e8b71_add_evaluation_dataset_versions.py
+            mlflow/store/db_migrations/versions/f2a7b8c9d0e1_add_evaluation_dataset_versions.py \
+            tests/data/test_evaluation_dataset_source.py
       - name: Generate protobuf outputs
         run: ./dev/generate-protos.sh
       - name: Install MLflow and pytest
@@ -54,9 +54,12 @@ jobs:
       - name: Run focused tests
         run: |
           pytest -q tests/store/tracking/sqlalchemy_store/test_sqlalchemy_store_eval_datasets.py
+          pytest -q tests/data/test_evaluation_dataset_source.py
           pytest -q tests/genai/datasets/test_evaluation_dataset.py
           pytest -q tests/store/tracking/test_rest_store.py -k dataset
           pytest -q tests/server/test_handlers.py -k dataset
+      - name: Check diff
+        run: git diff --check
       - name: Commit validated working state
         shell: bash
         run: |
