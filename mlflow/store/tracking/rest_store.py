@@ -2115,9 +2115,10 @@ class RestStore(
         req = GetDataset(dataset_id=dataset_id)
         if version is not None:
             req.version = version
+        req_body = None if version is None else message_to_json(req)
         response_proto = self._call_endpoint(
             GetDataset,
-            message_to_json(req),
+            req_body,
             endpoint=f"/api/3.0/mlflow/datasets/{dataset_id}",
         )
         return EvaluationDataset.from_proto(response_proto.dataset)
