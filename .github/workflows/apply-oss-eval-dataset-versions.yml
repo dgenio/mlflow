@@ -22,7 +22,7 @@ jobs:
       - name: Apply contribution patch
         shell: bash
         run: |
-          cat .chatgpt/final.* | base64 -d | gzip -d > /tmp/oss-eval-versions.patch
+          cat .chatgpt/v2.* | base64 -d | gzip -d > /tmp/oss-eval-versions.patch
           git apply --check /tmp/oss-eval-versions.patch
           git apply /tmp/oss-eval-versions.patch
           rm -rf .chatgpt
